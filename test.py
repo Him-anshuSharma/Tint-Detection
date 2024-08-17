@@ -29,7 +29,6 @@ else:
 
     # Initialize variables to store the best contour
     window_contour = None
-    min_diff = float('inf')
 
     for contour in contours:
         # Calculate area of the contour
@@ -40,29 +39,39 @@ else:
 
         # Filter contours based on area percentage
         if 1 < per < 5:
-            print(" in range ")
+            print("Contour in range")
+
             # Approximate the contour to reduce the number of points
             perimeter = cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, 0.02 * perimeter, True)
 
-            print(approx)
+            print("Approximated contour points:", approx)
 
-            # Check if the contour is close to a rectangle (4 points)
+            # Calculate bounding box and aspect ratio
             x, y, w, h = cv2.boundingRect(approx)
             aspect_ratio = w / float(h)
-            print(aspect_ratio)
+            print("Aspect Ratio:", aspect_ratio)
 
-                # Filter based on aspect ratio (typically close to 1.5 - 2.5 for car windows)
+            # Filter based on aspect ratio (typically close to 1.5 - 2.5 for car windows)
             if 1 < aspect_ratio < 5:
-                window_contour = approx
+                window_contour = (approx, x, y, w, h)
                 break  # Exit the loop if a suitable contour is found
 
     if window_contour is not None:
+        approx, x, y, w, h = window_contour
+
         # Draw the contour of the window on the original image
-        cv2.drawContours(image, [window_contour], -1, (0, 255, 0), 3)
+        cv2.drawContours(image, [approx], -1, (0, 255, 0), 3)
+
+        # Crop the detected window from the image
+        cropped_window = image[y:y + h, x:x + w]
+
+        # Save the cropped window image
+        cv2.imwrite('/Users/himanshusharma/Desktop/folders/Project I/images/cropped_window.jpg', cropped_window)
 
         # Display the image with the detected window contour
         cv2.imshow('Window Contour', image)
+        cv2.imshow('Cropped Window', cropped_window)
         cv2.waitKey(0)
     else:
         print("No window contour found.")
