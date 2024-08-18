@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Load the image
-image_path = '/Users/himanshusharma/Desktop/folders/Project I/images/a.jpg'
+image_path = '/Users/himanshusharma/Desktop/folders/Project I/images/a2.jpg'
 image = cv2.imread(image_path)
 
 # Check if the image was loaded successfully
@@ -39,18 +39,15 @@ else:
 
         # Filter contours based on area percentage
         if 1 < per < 5:
-            print("Contour in range")
 
             # Approximate the contour to reduce the number of points
             perimeter = cv2.arcLength(contour, True)
-            approx = cv2.approxPolyDP(contour, 0.02 * perimeter, True)
+            approx = cv2.approxPolyDP(contour, 0.01 * perimeter, True)
 
-            print("Approximated contour points:", approx)
 
             # Calculate bounding box and aspect ratio
             x, y, w, h = cv2.boundingRect(approx)
             aspect_ratio = w / float(h)
-            print("Aspect Ratio:", aspect_ratio)
 
             # Filter based on aspect ratio (typically close to 1.5 - 2.5 for car windows)
             if 1 < aspect_ratio < 5:
@@ -61,7 +58,7 @@ else:
         approx, x, y, w, h = window_contour
 
         # Draw the contour of the window on the original image
-        cv2.drawContours(image, [approx], -1, (0, 255, 0), 3)
+        cv2.drawContours(image, [approx], -1, (0, 255, 0), 1)
 
         # Crop the detected window from the image
         cropped_window = image[y:y + h, x:x + w]
