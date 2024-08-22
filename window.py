@@ -26,6 +26,7 @@ else:
     contours, hierarchy = cv2.findContours(edged.copy(), 
                                            cv2.RETR_EXTERNAL, 
                                            cv2.CHAIN_APPROX_SIMPLE)
+    return contours
 
     # Initialize variables to store the best contour
     window_contour = None
